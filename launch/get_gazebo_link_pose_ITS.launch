@@ -1,0 +1,10 @@
+<launch>
+  <param name="use_sim_time" value="true"/>
+
+  <!-- <node pkg="point_cloud_fusion" type="get_gazebo_link_pose_ITS.py" name="get_gazebo_link_pose_ITS" output="screen"> -->
+  <node pkg="point_cloud_fusion" type="get_gazebo_link_pose_ITS_neuvition.py" name="get_gazebo_link_pose_ITS" output="screen">
+    <!-- <param name="~link_name" value="asphalt_plane::link"/> -->
+    <param name="~link_name" value="ground_plane::link"/>
+    <param name="publish_rate" value="20"/>
+  </node>
+</launch>

@@ -1,0 +1,80 @@
+<launch>
+ <!-- THis is comment -->
+  <param name="use_sim_time" value="false"/>
+
+  <arg name="toRegister_L1" default="true"/>
+  <arg name="toRegister_L2" default="true"/>
+  <arg name="toRegister_L3" default="true"/>
+  <arg name="toFuse3LIDAR" default="false"/>
+
+  <arg name="LIDAR1_tp" default="/its1/livox/lidar_3GGDJ5700100971"/>
+  <arg name="LIDAR2_tp" default="/its2/livox/lidar_3GGDJ5C00101791"/>
+  <arg name="LIDAR3_tp" default="/its2/livox/lidar_3GGDJ5F00101411"/>
+  <arg name="LIDARref_tp" default="/livox/lidar_1HDDH1200100801/time_sync"/>
+  <arg name="exFile1_dir" default="/home/jun/folder_lyy/ITS/20220117_simulation/mid_971.csv"/>
+  <arg name="exFile2_dir" default="/home/jun/folder_lyy/ITS/20220117_simulation/mid_791.csv"/>
+  <arg name="exFile3_dir" default="/home/jun/folder_lyy/ITS/20220117_simulation/mid_411.csv"/>
+
+  <arg name="node1_name" default="pcl_register1"/>
+  <arg name="node2_name" default="pcl_register2"/>
+  <arg name="node3_name" default="pcl_register3"/>
+  <arg name="cloud_rectified_name" default="world_pc"/>
+
+  <arg name="syncNode1_name" default="livox_time_sync1"/>
+  <arg name="syncNode2_name" default="livox_time_sync2"/>
+  <arg name="syncNode3_name" default="livox_time_sync3"/>
+
+
+  <group if="$(arg toRegister_L1)">
+    <node name="$(arg node1_name)" pkg="point_cloud_fusion" type="pcl_fusion_real" output="screen">
+      <remap from="~cloud_in" to="$(arg LIDAR1_tp)"/>
+      <param name="cloud_fused_tp" value="$(arg cloud_rectified_name)"/>
+      
+      <param name="use_vox_filter" type="bool" value="false"/>
+      <param name="voxel_grid_size" type="double" value="0.01"/>
+
+      <param name="exParamFile_dir_" type="string" value="$(arg exFile1_dir)"/>
+    </node>
+  </group>
+
+  <group if="$(arg toRegister_L2)">
+    <node name="$(arg node2_name)" pkg="point_cloud_fusion" type="pcl_fusion_real" output="screen">
+      <remap from="~cloud_in" to="$(arg LIDAR2_tp)"/>
+      <param name="cloud_fused_tp" value="$(arg cloud_rectified_name)"/>
+      
+      <param name="use_vox_filter" type="bool" value="false"/>
+      <param name="voxel_grid_size" type="double" value="0.01"/>
+
+      <param name="exParamFile_dir_" type="string" value="$(arg exFile2_dir)"/>
+    </node>
+  </group>
+
+  <group if="$(arg toRegister_L3)">
+    <node name="$(arg node3_name)" pkg="point_cloud_fusion" type="pcl_fusion_real" output="screen">
+      <remap from="~cloud_in" to="$(arg LIDAR3_tp)"/>
+      <param name="cloud_fused_tp" value="$(arg cloud_rectified_name)"/>
+      
+      <param name="use_vox_filter" type="bool" value="false"/>
+      <param name="voxel_grid_size" type="double" value="0.01"/>
+
+      <param name="exParamFile_dir_" type="string" value="$(arg exFile3_dir)"/>
+    </node>
+  </group>
+
+  <group if="$(arg toFuse3LIDAR)">
+    <include file="$(find livox_sync)/launch/livox_time_sync_3pc.launch">
+      <arg name="cloud1_tp" value="/$(arg node1_name)/$(arg cloud_rectified_name)"/>
+      <arg name="cloud2_tp" value="/$(arg node2_name)/$(arg cloud_rectified_name)"/>
+      <arg name="cloud3_tp" value="/$(arg node3_name)/$(arg cloud_rectified_name)"/>
+      
+      <arg name="node1_name" value="$(arg syncNode1_name)"/>
+      <arg name="node2_name" value="$(arg syncNode2_name)"/>
+      <arg name="node3_name" value="$(arg syncNode3_name)"/>
+
+      <arg name="node_type" default="livox_ros_time_sync"/>
+    </include>
+
+    
+  </group>
+
+</launch>

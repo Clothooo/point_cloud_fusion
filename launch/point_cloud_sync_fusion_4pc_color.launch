@@ -1,0 +1,45 @@
+<launch>
+ <!-- THis is comment -->
+ <!-- <node name="pcl_fusion" pkg="point_cloud_fusion" type="pcl_fusion" output="screen"> -->
+  <arg name="cloud1_tp" default="/livox/lidar1"/>
+  <arg name="cloud2_tp" default="/livox/lidar2"/>
+  <arg name="cloud3_tp" default="/livox/lidar1"/>
+  <arg name="cloud4_tp" default="/livox/lidar1"/>
+
+
+  <include file="$(find livox_sync)/launch/livox_time_sync_4pc.launch">
+    <arg name="cloud1_tp" value="$(arg cloud1_tp)"/>
+    <arg name="cloud2_tp" value="$(arg cloud2_tp)"/>
+    <arg name="cloud3_tp" value="$(arg cloud3_tp)"/>
+    <arg name="cloud4_tp" value="$(arg cloud4_tp)"/>
+    <arg name="node1" value="livox1_sync"/>
+    <arg name="node2" value="livox2_sync"/>
+    <arg name="node3" value="livox3_sync"/>
+    <arg name="node4" value="livox4_sync"/>
+  </include>
+
+  <include file="$(find point_cloud_fusion)/launch/point_cloud_fusion_2pc_color.launch">
+    <arg name="cloud_ref_tp" value="/livox1_sync/lidar"/>
+    <arg name="cloud_act_tp" value="/livox2_sync/lidar"/>
+    <arg name="ns" value="1_2"/>
+    <arg name="exParam_file" value="/home/jun/folder_lyy/3d_rebuild_rosbag/final_results/cal_TF_1_2.csv"/>
+  </include>
+
+  <include file="$(find point_cloud_fusion)/launch/point_cloud_fusion_2pc_color.launch">
+    <arg name="cloud_ref_tp" value="/livox1_sync/lidar"/>
+    <arg name="cloud_act_tp" value="/livox3_sync/lidar"/>
+    <arg name="ns" value="1_3"/>
+    <arg name="exParam_file" value="/home/jun/folder_lyy/3d_rebuild_rosbag/final_results/cal_TF_1_3.csv"/>
+  </include>
+
+  <include file="$(find point_cloud_fusion)/launch/point_cloud_fusion_2pc_color.launch">
+    <arg name="cloud_ref_tp" value="/livox1_sync/lidar"/>
+    <arg name="cloud_act_tp" value="/livox4_sync/lidar"/>
+    <arg name="ns" value="1_5"/>
+    <arg name="exParam_file" value="/home/jun/folder_lyy/3d_rebuild_rosbag/final_results/cal_TF_1_5.csv"/>
+  </include>
+  
+  <node type="rviz" name="rviz1" pkg="rviz" args="-d $(find point_cloud_fusion)/rviz/3dRebuild_pc_color_fusion.rviz" />
+
+
+</launch>

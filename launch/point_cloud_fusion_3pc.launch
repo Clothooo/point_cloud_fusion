@@ -1,0 +1,19 @@
+<launch>
+ <!-- THis is comment -->
+  <param name="use_sim_time" value="false"/>
+
+  <arg name="cloud1_tp" default="/pcl_register1/world_pc/ros_sync"/>
+  <arg name="cloud2_tp" default="/pcl_register2/world_pc/ros_sync"/>
+  <arg name="cloud3_tp" default="/pcl_register3/world_pc/ros_sync"/>
+
+  <node name="pcl_fusion_3pc" pkg="point_cloud_fusion" type="pcl_fusion_real" output="screen">
+    <param name="cloud1_tp" value="$(arg cloud1_tp)"/>
+    <param name="cloud2_tp" value="$(arg cloud2_tp)"/>
+    <param name="cloud3_tp" value="$(arg cloud3_tp)"/>
+    <param name="cloud_fused_tp" value="fusion_cloud"/>
+    
+    <param name="use_vox_filter" type="bool" value="false"/>
+    <param name="voxel_grid_size" type="double" value="0.01"/>
+  </node>
+
+</launch>

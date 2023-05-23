@@ -1,0 +1,25 @@
+<launch>
+ <!-- THis is comment -->
+ <param name="use_sim_time" value="true"/>
+ <node name="pcl_fusion" pkg="point_cloud_fusion" type="pcl_fusion" output="screen">
+ <!-- <node name="pcl_fusion" pkg="point_cloud_fusion" type="pcl_fusion_real" output="screen"> -->
+    
+    <!-- <param name="cloud1_tp" value="/RealSense_points_1"/>
+    <param name="cloud2_tp" value="/RealSense_points_2"/>
+    <param name="cloud3_tp" value="/RealSense_points_3"/> -->
+    <!-- <param name="cloud2_tp" value="/livox/lidar_1HDDH1200100801/time_sync"/>
+    <param name="cloud1_tp" value="/livox/lidar_3WEDH7600103381/time_sync"/> -->
+    <param name="cloud1_tp" value="/neuvition_points_1"/>
+    <param name="cloud2_tp" value="/neuvition_points_2"/>
+    <param name="cloud3_tp" value="/neuvition_points_3"/>
+    <param name="cloud_fused_tp" value="world_frame_pcl/fusion_cloud"/>
+    
+    <param name="use_vox_filter" type="bool" value="true"/>
+    <param name="voxel_grid_size" type="double" value="0.01"/>
+
+    <param name="range_1" type="double" value="4.3"/>
+    <param name="range_2" type="double" value="4.5"/>
+    <param name="range_3" type="double" value="4.5"/>
+
+ </node>
+</launch>

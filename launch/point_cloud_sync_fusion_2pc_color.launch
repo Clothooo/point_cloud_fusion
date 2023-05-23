@@ -1,0 +1,42 @@
+<launch>
+ <!-- THis is comment -->
+ <!-- <node name="pcl_fusion" pkg="point_cloud_fusion" type="pcl_fusion" output="screen"> -->
+  <arg name="cloud_ref_tp" default="/livox/lidar1"/>
+  <arg name="cloud_act_tp" default="/livox/lidar2"/>
+  <arg name="ns" default="/"/>
+  <arg name="exParam_file" default="/home/jun/folder_lyy/ITS/20211208_simulation/cal_TF_1_2.csv"/>
+  <arg name="use_inverse_tr" default="false"/>
+
+  <include file="$(find livox_sync)/launch/livox_time_sync_2pc.launch">
+    <arg name="cloud1_tp" value="$(arg cloud_ref_tp)"/>
+    <arg name="cloud2_tp" value="$(arg cloud_act_tp)"/>
+    <arg name="ns" value="$(arg ns)"/>
+  </include>
+
+  <group ns="$(arg ns)">
+    <node name="pcl_fusion" pkg="point_cloud_fusion" type="pcl_fusion_color" output="screen">
+      
+      <!-- <param name="cloud1_tp" value="/RealSense_points_1"/>
+      <param name="cloud2_tp" value="/RealSense_points_2"/>
+      <param name="cloud3_tp" value="/RealSense_points_3"/> -->
+      <param name="cloud_ref_tp" value="$(arg cloud_ref_tp)/ros_time_sync"/>
+      <param name="cloud1_tp" value="$(arg cloud_act_tp)/ros_time_sync"/>
+      <!-- <param name="cloud1_tp" value="/neuvition_points_1"/>
+      <param name="cloud2_tp" value="/neuvition_points_2"/> -->
+      <!-- <param name="cloud3_tp" value="/neuvition_points_3"/> -->
+      <!-- <param name="cloud_fused_tp" value="world_frame_pcl/fusion_cloud"/> -->
+      <param name="cloud_fused_tp" value="fusion_cloud"/>
+      
+      <param name="use_vox_filter" type="bool" value="false"/>
+      <param name="voxel_grid_size" type="double" value="0.01"/>
+
+      <param name="range_1" type="double" value="10"/>
+      <param name="range_2" type="double" value="10"/>
+      <param name="range_3" type="double" value="4.5"/>
+
+      <param name="exParamFile_dir_" type="string" value="$(arg exParam_file)"/>
+      <param name="use_inverse_tr_" type="bool" value="$(arg use_inverse_tr)"/>
+
+    </node>
+  </group>
+</launch>
